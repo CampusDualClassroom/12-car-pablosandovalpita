@@ -11,78 +11,140 @@ public class Car {
     public boolean reverse = false;
     public int wheelsAngle = 0;
 
-    public Car (String brand, String model, String fuel){
+    // Constructores
+    public Car(String brand, String model, String fuel) {
         this.brand = brand;
         this.model = model;
         this.fuel = fuel;
     }
 
-    public Car(){
+    public Car() {
         this.brand = "Citroën";
         this.model = "Xsara";
         this.fuel = "Diesel";
     }
 
+    // Encender el coche
     public void start() {
-        if (this.tachometer == 0){
+        if (this.tachometer == 0) {
             this.tachometer = 1000;
             System.out.println("Vehículo encendido");
-        }else{
+        } else {
             System.out.println("Vehículo ya está encendido");
         }
     }
 
+    // Apagar el coche
     public void stop() {
-        if (this.speedometer == 0){
+        if (this.speedometer == 0) {
             this.tachometer = 0;
             System.out.println("Vehículo apagado");
-        }else{
+        } else {
             System.out.println("No se puede apagar el vehículo. Primero tiene que estar detenido");
         }
     }
-    public void accelerate(){
 
+    // Acelerar
+    public void accelerate() {
+        if (this.tachometer > 0 && this.speedometer < MAX_SPEED) {
+            this.speedometer += 10;
+            if (this.speedometer > MAX_SPEED) {
+                this.speedometer = MAX_SPEED;
+            }
+        }
     }
 
-    public void brake(){
-
+    // Frenar
+    public void brake() {
+        if (this.speedometer > 0) {
+            this.speedometer -= 10;
+            if (this.speedometer < 0) {
+                this.speedometer = 0;
+            }
+        }
     }
 
-    public void turnAngleOfWheels(int angle){
-
+    // Girar ruedas con límite 45 grados
+    public void turnAngleOfWheels(int angle) {
+        if (angle > 45) {
+            this.wheelsAngle = 45;
+        } else if (angle < -45) {
+            this.wheelsAngle = -45;
+        } else {
+            this.wheelsAngle = angle;
+        }
     }
 
-    public String showSteeringWheelDetail(){
-
-        return "";
+    // Mostrar el ángulo de las ruedas
+    public String showSteeringWheelDetail() {
+        return "El ángulo de las ruedas es: " + this.wheelsAngle + " grados.";
     }
 
-    public boolean isReverse(){
-
-        return false;
+    // Saber si está en marcha atrás
+    public boolean isReverse() {
+        return this.reverse;
     }
 
-    public void setReverse(boolean reverse){
-
+    // Cambiar marcha atrás
+    public void setReverse(boolean reverse) {
+        if (reverse) {
+            if (this.speedometer == 0) {
+                this.reverse = true;
+                this.gear = "R";
+            }
+        } else {
+            this.reverse = false;
+            this.gear = "N";
+        }
     }
 
-    public void showDetails(){
-
+    // Mostrar detalles del coche
+    public void showDetails() {
+        System.out.println("Marca: " + this.brand);
+        System.out.println("Modelo: " + this.model);
+        System.out.println("Combustible: " + this.fuel);
+        System.out.println("Velocidad: " + this.speedometer);
+        System.out.println("Tacómetro: " + this.tachometer);
+        System.out.println("Marcha: " + this.gear);
+        System.out.println("Marcha atrás: " + this.reverse);
+        System.out.println("Ángulo ruedas: " + this.wheelsAngle);
     }
 
+    // Tacómetro mayor que cero
     public boolean isTachometerGreaterThanZero() {
-
-        return false;
+        return this.tachometer > 0;
     }
 
+    // Tacómetro igual a cero
     public boolean isTachometerEqualToZero() {
-
-        return false;
+        return this.tachometer == 0;
     }
+
 
     public static void main(String[] args) {
+        Car car = new Car("Toyota", "Yaris", "Gasolina");
 
+        System.out.println("¿Tacómetro en cero?: " + car.isTachometerEqualToZero());
+
+        car.start();
+        car.start(); // Intentar encender de nuevo
+
+        for (int i = 0; i < 13; i++) {
+            car.accelerate(); // Acelerar hasta intentar superar velocidad máxima
+        }
+
+        for (int i = 0; i < 13; i++) {
+            car.brake(); // Frenar hasta intentar ir por debajo de 0
+        }
+
+        car.turnAngleOfWheels(20);
+        car.turnAngleOfWheels(100); // Se limitará a 45
+
+        car.setReverse(true); // No se puede si está en movimiento
+        car.brake(); // Detener
+        car.setReverse(true); // Ahora sí
+
+        car.stop(); // Apagar coche
+        car.showDetails();
     }
-
-
 }
